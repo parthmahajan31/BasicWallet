@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "660137923205",
+    "project_id": "vpdmoney-60f7a",
+    "storage_bucket": "vpdmoney-60f7a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:660137923205:android:ccf42a27298ef380ffcfec",
+        "android_client_info": {
+          "package_name": "com.task.vpdmoney"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZgKTrcuWAVjLeX9BH7HR8fP40MvgHIaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
