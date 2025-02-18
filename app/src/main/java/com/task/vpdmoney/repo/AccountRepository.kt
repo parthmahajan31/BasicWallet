@@ -1,5 +1,6 @@
 package com.task.vpdmoney.repo
 
+import com.task.vpdmoney.data.Account
 import com.task.vpdmoney.data.UserAccount
 import com.task.vpdmoney.room.UserDao
 import kotlinx.coroutines.flow.Flow
@@ -15,4 +16,5 @@ class AccountRepository @Inject constructor(
     fun getUserAccountById(userId: String): Flow<UserAccount?> {
         return userAccountDao.getUserAccountById(userId)
     }
+
 }

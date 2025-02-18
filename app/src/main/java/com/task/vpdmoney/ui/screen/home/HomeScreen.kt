@@ -11,9 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -30,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.task.vpdmoney.R
 import com.task.vpdmoney.data.UserAccount
 import com.task.vpdmoney.ui.common.AppFilledButton
 import com.task.vpdmoney.ui.theme.Purple80
@@ -110,10 +111,10 @@ fun HomeScreenContent(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Filled.AccountBalanceWallet,
+                                        painter = painterResource(R.drawable.ic_wallet),
                                         contentDescription = "Wallet Icon",
                                         tint = colorBackgroundWhite,
-                                        modifier = Modifier.size(40.dp)
+                                        modifier = Modifier.size(40.dp),
                                     )
                                     Text(
                                         text = "₹${it?.accountBalance?.formatValue()}",
@@ -133,6 +134,16 @@ fun HomeScreenContent(
                                     text = "Email : ${it?.email}",
                                     color = colorBackgroundWhite,
                                     style = MaterialTheme.typography.bodyMedium
+                                )
+                                AppFilledButton(
+                                    modifier = Modifier
+                                        .padding(top = 16.dp)
+                                        .align(alignment = Alignment.CenterHorizontally)
+                                        .width(150.dp)
+                                        .padding(5.dp),
+                                    text = "Transfer",
+                                    textColor = Purple80,
+                                    backgroundColor = colorBackgroundWhite
                                 )
                             }
                         }

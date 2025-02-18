@@ -76,7 +76,6 @@ class LoginViewModel @Inject constructor(
         auth.signInWithEmailAndPassword(uiState.value.email, uiState.value.password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    insertUserData()
                     uiState.update {
                         it.copy(
                             isUserLoggedIn = true,

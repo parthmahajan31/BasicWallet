@@ -93,5 +93,7 @@ dependencies {
     implementation(libs.moshi.kotlin)
     implementation(libs.converter.moshi)
 
-    implementation("androidx.compose.material:material-icons-extended:1.7.5")
+    // Gson
+    implementation(libs.gson.json)
+
 }

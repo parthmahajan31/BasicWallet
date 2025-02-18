@@ -1,11 +1,14 @@
 package com.task.vpdmoney.ui.screen.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.gson.Gson
 import com.task.vpdmoney.repo.AccountRepository
+import com.task.vpdmoney.room.AccountsInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val userAccountRepository: AccountRepository
+    private val userAccountRepository: AccountRepository,
+    private val accountsInterface: AccountsInterface
 ) : ViewModel() {
 
     private val uiState = MutableStateFlow(HomeState())
@@ -33,6 +37,12 @@ class HomeViewModel @Inject constructor(
             userAccount.collectLatest { user ->
                 uiState.update { it.copy(userAccountData = user) }
             }
+        }
+
+        viewModelScope.launch {
+            val accountsList = accountsInterface.getAccountsList()
+            Log.e("TAG", "UserAccounts:${Gson().toJson(accountsList.accounts)}")
+//            uiState.update { it.copy(accountsList = accountsList.accounts) }
         }
     }
 }

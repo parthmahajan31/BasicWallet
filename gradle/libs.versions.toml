@@ -31,6 +31,8 @@ room = "2.6.1"
 # Moshi
 moshiKotlin = "1.15.1"
 converterMoshi = "2.11.0"
+#gson
+gson = "2.10.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -72,6 +74,8 @@ room-ktx = {group = "androidx.room", name = "room-ktx", version.ref = "room"}
 # Moshi
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshiKotlin" }
 converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "converterMoshi" }
+#Gson
+gson-json = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
