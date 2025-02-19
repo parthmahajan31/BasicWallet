@@ -10,14 +10,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,8 +42,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.task.vpdmoney.R
+import com.task.vpdmoney.data.Account
 import com.task.vpdmoney.data.UserAccount
 import com.task.vpdmoney.ui.common.AppFilledButton
+import com.task.vpdmoney.ui.common.AppSnackBar
+import com.task.vpdmoney.ui.common.ShowAppSnackbar
 import com.task.vpdmoney.ui.theme.Purple80
 import com.task.vpdmoney.ui.theme.colorBackgroundWhite
 import com.task.vpdmoney.util.formatValue
@@ -52,10 +59,36 @@ fun HomeScreen(
     val viewState by viewModel.consumableState().collectAsState()
 
     val userAccountData by remember { derivedStateOf { viewState.userAccountData } }
+    val accountsList by remember { derivedStateOf { viewState.accountsList } }
+    val isShowTransferSheet by remember { derivedStateOf { viewState.isShowTransferSheet } }
+    val srcAccount by remember { derivedStateOf { viewState.srcAccount } }
+    val desAccount by remember { derivedStateOf { viewState.desAccount } }
+    val amount by remember { derivedStateOf { viewState.amount } }
+    val snackBarHostState = remember { SnackbarHostState() }
 
     HomeScreenContent(
+        snackbarHostState = snackBarHostState,
         onNavigateLogin = onNavigateLogin,
-        userAccountData = { userAccountData }
+        userAccountData = { userAccountData },
+        accountsList = { accountsList },
+        onTransferButtonClick = { viewModel.onEvent(HomeUiEvent.TransferButtonClick) }
+    )
+
+    HomeScreenModal(
+        isShowTransferMoneySheet = { isShowTransferSheet },
+        onDismissTransfer = { viewModel.onEvent(HomeUiEvent.DismissTransfer) },
+        srcAccount = { srcAccount },
+        desAccount = { desAccount },
+        amount = { amount },
+        onSrcAccChange = { viewModel.onEvent(HomeUiEvent.SrcAccountChange(it)) },
+        onDesAccChange = { viewModel.onEvent(HomeUiEvent.DesAccountChange(it)) },
+        onAmountChanged = { viewModel.onEvent(HomeUiEvent.AmountAccountChange(it)) },
+        onTransferAmount = { viewModel.onEvent(HomeUiEvent.TransferAmount) },
+    )
+
+    ShowAppSnackbar(
+        snackbarHostState = snackBarHostState,
+        snackbarMessage = { viewState.snackBarMessage },
     )
 }
 
@@ -63,9 +96,30 @@ fun HomeScreen(
 fun HomeScreenContent(
     onNavigateLogin: () -> Unit = {},
     userAccountData: () -> UserAccount? = { null },
+    accountsList: () -> List<Account> = { emptyList() },
+    onTransferButtonClick: () -> Unit = {},
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        snackbarHost = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .safeDrawingPadding(),
+                contentAlignment = Alignment.TopCenter,
+            ) {
+                SnackbarHost(
+                    hostState = snackbarHostState,
+                    snackbar = { snackbarData ->
+                        AppSnackBar(
+                            modifier = Modifier.padding(12.dp),
+                            snackbarData = snackbarData,
+                        )
+                    }
+                )
+            }
+        }
     ) { padding ->
         Box(
             modifier = Modifier
@@ -75,6 +129,7 @@ fun HomeScreenContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(bottom = 40.dp)
             ) {
                 userAccountData().let {
                     Card(
@@ -143,23 +198,36 @@ fun HomeScreenContent(
                                         .padding(5.dp),
                                     text = "Transfer",
                                     textColor = Purple80,
-                                    backgroundColor = colorBackgroundWhite
+                                    backgroundColor = colorBackgroundWhite,
+                                    onClick = { onTransferButtonClick() }
                                 )
                             }
                         }
                     }
                 }
-            }
-            AppFilledButton(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.BottomCenter),
-                text = "Sign Out",
-                onClick = {
-                    Firebase.auth.signOut()
-                    onNavigateLogin()
+                LazyColumn {
+                    items(accountsList().size) { index ->
+                        AccountItem(
+                            account = { accountsList()[index] }
+                        )
+                    }
                 }
-            )
+            }
+            Box(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .background(color = colorBackgroundWhite)
+                    .align(Alignment.BottomCenter)
+            ) {
+                AppFilledButton(
+                    modifier = Modifier.padding(16.dp),
+                    text = "Sign Out",
+                    onClick = {
+                        Firebase.auth.signOut()
+                        onNavigateLogin()
+                    }
+                )
+            }
         }
     }
 }

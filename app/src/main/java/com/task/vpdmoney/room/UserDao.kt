@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.task.vpdmoney.data.UserAccount
 import kotlinx.coroutines.flow.Flow
 
@@ -14,4 +15,7 @@ interface UserDao {
 
     @Query("SELECT * FROM user_accounts WHERE userId = :userId")
     fun getUserAccountById(userId: String): Flow<UserAccount?>
+
+    @Update
+    suspend fun updateUserAccount(userAccount: UserAccount)
 }

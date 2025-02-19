@@ -17,4 +17,7 @@ class AccountRepository @Inject constructor(
         return userAccountDao.getUserAccountById(userId)
     }
 
+    suspend fun updateUserAccount(userAccount: UserAccount) {
+        userAccountDao.updateUserAccount(userAccount)
+    }
 }

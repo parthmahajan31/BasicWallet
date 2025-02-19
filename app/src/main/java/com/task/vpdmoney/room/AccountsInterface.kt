@@ -5,4 +5,5 @@ import com.task.vpdmoney.data.UsersList
 
 interface AccountsInterface {
     suspend fun getAccountsList(): UsersList
+    suspend fun updateAccountsList(userList: UsersList)
 }
